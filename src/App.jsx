@@ -1,53 +1,30 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import QRCode from "react-qr-code";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [text, setText] = useState({});
+  const [ipAddress, setIpAddress] = useState("");
 
   useEffect(() => {
-    (async function () {
-      let chrome = window.versions.chrome();
-      let node = window.versions.node();
-      let electron = window.versions.electron();
+    // Request IP address from main process
+    window.ipcRenderer.send("get-ip", "hello");
 
-      setText({ chrome, node, electron });
-    })();
+    // Receive IP address from main process and update state
+    window.ipcRenderer.on("ip-address", (data) => {
+      setIpAddress(data);
+    });
+
+    // Cleanup event listener
   }, []);
-
   return (
     <>
       <div>
-        <a href="https://electronjs.org" target="_blank">
-          <img
-            src="https://www.electronjs.org/assets/img/logo.svg"
-            className="logo"
-            alt="Electron logo"
-          />
-        </a>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Your IP Address:</h1>
+        <div style={{ background: "white", padding: "16px" }}>
+          <QRCode value={ipAddress + "/hello"} />
+        </div>
       </div>
-      <h1>Electron + Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> for react code and
-          <code>./electron.cjs</code> for electron code
-        </p>
-      </div>
-      <p className="versions">
-        This app is using Chrome (v{text?.chrome}), Node.js (v{text?.node}), and
-        Electron (v{text?.electron})
-      </p>
+      {/* Your other JSX content goes here */}
     </>
   );
 }

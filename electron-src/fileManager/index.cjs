@@ -3,7 +3,6 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const multer = require("multer");
-
 // Create the server
 const server = express();
 const port = 3000;
@@ -12,22 +11,6 @@ const port = 3000;
 const downloadsPath = path.join(os.homedir(), "Downloads", "fileSync");
 fs.mkdirSync(downloadsPath, { recursive: true });
 
-// Log the current IP address of the machine
-const ifaces = os.networkInterfaces();
-let currentIp = "127.0.0.1";
-for (const devName in ifaces) {
-  const iface = ifaces[devName];
-  for (const alias of iface) {
-    if (alias.family === "IPv4" && alias.address !== "127.0.0.1") {
-      console.log("Current IP address:", alias.address);
-      currentIp = alias.address;
-      break;
-    }
-  }
-}
-server.get("/ip", (req, res) => {
-  res.send(currentIp);
-});
 server.get("/hello", (req, res) => {
   res.status(200).send({message: "Hello, World!"});
 });
