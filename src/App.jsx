@@ -7,7 +7,7 @@ function App() {
 
   useEffect(() => {
     // Request IP address from main process
-    window.ipcRenderer.send("get-ip", "hello");
+    window.ipcRenderer.send("get-ip");
 
     // Receive IP address from main process and update state
     window.ipcRenderer.on("ip-address", (data) => {
@@ -21,7 +21,7 @@ function App() {
       <div>
         <h1>Your IP Address:</h1>
         <div style={{ background: "white", padding: "16px" }}>
-          <QRCode value={ipAddress + "/hello"} />
+          <QRCode value={ipAddress} />
         </div>
       </div>
       {/* Your other JSX content goes here */}
